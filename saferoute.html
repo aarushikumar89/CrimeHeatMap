@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>SafeRoute Map</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <!-- Mapbox GL JS CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+
+  <!-- Mapbox Directions Plugin CSS + JS -->
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css"
+    rel="stylesheet"
+  />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
+
+  <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <!-- Mapbox GL JS JavaScript -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script>
+    // 🚨 IMPORTANT:
+    // Replace this placeholder with your real Mapbox access token before running locally
+    mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+
+    // Create the map
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/aarushilk/cmdf3iuvd03mh01r53wxqbwfv',
+      center: [-122.12, 37.68], // Alameda
+      zoom: 12
+    });
+
+    // Add navigation controls (zoom buttons)
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // Add directions (routing)
+    map.addControl(
+      new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        unit: 'metric',
+        profile: 'mapbox/driving'
+      }),
+      'top-left'
+    );
+  </script>
+
+</body>
+</html>
