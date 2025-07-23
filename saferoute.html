@@ -5,17 +5,12 @@
   <title>SafeRoute Map</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
-  <!-- Mapbox GL JS CSS -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-
-  <!-- Mapbox Directions Plugin CSS + JS -->
   <link
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css"
     rel="stylesheet"
   />
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
-
-  <!-- Turf.js for spatial logic (buffering, popups, etc) -->
   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
 
   <style>
@@ -27,10 +22,8 @@
 
   <div id="map"></div>
 
-  <!-- Mapbox GL JS -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
   <script>
-    // 🔐 Your access token (safe to use if it's restricted)
     mapboxgl.accessToken = 'pk.eyJ1IjoiYWFydXNoaWxrIiwiYSI6ImNtZDU2a2FuNDBudG8yam9obm9scWp3dWYifQ.bkx33ku5_XgNIGQMoqx_QQ';
 
     const map = new mapboxgl.Map({
@@ -51,53 +44,50 @@
       'top-left'
     );
 
-    // Load crime points and add popups
-fetch(map.on('load', () => {
-  fetch('https://aarushikumar89.github.io/CrimeHeatMap/crime_points.geojson')
-    .then(response => response.json())
-    .then(data => {
-      map.addSource('crime-points', {
-        type: 'geojson',
-        data: data
-      });
+    map.on('load', () => {
+      fetch('https://aarushikumar89.github.io/CrimeHeatMap/crime_points.geojson')
+        .then(response => response.json())
+        .then(data => {
+          map.addSource('crime-points', {
+            type: 'geojson',
+            data: data
+          });
 
-      map.addLayer({
-        id: 'crime-points-layer',
-        type: 'circle',
-        source: 'crime-points',
-        paint: {
-          'circle-radius': 5,
-          'circle-color': [
-            'match', ['get', 'category'],
-            'Violent', '#ff0000',
-            'Property', '#ffa500',
-            'Traffic', '#00ff00',
-            'Legal', '#0000ff',
-            'Other', '#888888',
-            '#000000'
-          ]
-        }
-      });
+          map.addLayer({
+            id: 'crime-points-layer',
+            type: 'circle',
+            source: 'crime-points',
+            paint: {
+              'circle-radius': 5,
+              'circle-color': [
+                'match', ['get', 'category'],
+                'Violent', '#ff0000',
+                'Property', '#ffa500',
+                'Traffic', '#00ff00',
+                'Legal', '#0000ff',
+                'Other', '#888888',
+                '#000000'
+              ]
+            }
+          });
 
-      // Add popups on click
-      map.on('click', 'crime-points-layer', (e) => {
-        const props = e.features[0].properties;
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(`<strong>${props.category}</strong><br>${props.description}`)
-          .addTo(map);
-      });
+          map.on('click', 'crime-points-layer', (e) => {
+            const props = e.features[0].properties;
+            new mapboxgl.Popup()
+              .setLngLat(e.lngLat)
+              .setHTML(`<strong>${props.category}</strong><br>${props.description}`)
+              .addTo(map);
+          });
 
-      map.on('mouseenter', 'crime-points-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
+          map.on('mouseenter', 'crime-points-layer', () => {
+            map.getCanvas().style.cursor = 'pointer';
+          });
 
-      map.on('mouseleave', 'crime-points-layer', () => {
-        map.getCanvas().style.cursor = '';
-      });
+          map.on('mouseleave', 'crime-points-layer', () => {
+            map.getCanvas().style.cursor = '';
+          });
+        });
     });
-});
-
   </script>
 
 </body>
