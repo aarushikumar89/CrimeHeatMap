@@ -52,48 +52,51 @@
     );
 
     // Load crime points and add popups
-fetch('https://aarushikumar89.github.io/CrimeHeatMap/crime_points.geojson')
-  .then(response => response.json())
-  .then(data => {
-    map.addSource('crime-points', {
-      type: 'geojson',
-      data: data
-    });
+fetch(map.on('load', () => {
+  fetch('https://aarushikumar89.github.io/CrimeHeatMap/crime_points.geojson')
+    .then(response => response.json())
+    .then(data => {
+      map.addSource('crime-points', {
+        type: 'geojson',
+        data: data
+      });
 
-    map.addLayer({
-      id: 'crime-points-layer',
-      type: 'circle',
-      source: 'crime-points',
-      paint: {
-        'circle-radius': 5,
-        'circle-color': [
-          'match', ['get', 'category'],
-          'Violent', '#ff0000',
-          'Property', '#ffa500',
-          'Traffic', '#00ff00',
-          'Legal', '#0000ff',
-          'Other', '#888888',
-          '#000000'
-        ]
-      }
-    });
+      map.addLayer({
+        id: 'crime-points-layer',
+        type: 'circle',
+        source: 'crime-points',
+        paint: {
+          'circle-radius': 5,
+          'circle-color': [
+            'match', ['get', 'category'],
+            'Violent', '#ff0000',
+            'Property', '#ffa500',
+            'Traffic', '#00ff00',
+            'Legal', '#0000ff',
+            'Other', '#888888',
+            '#000000'
+          ]
+        }
+      });
 
-    map.on('click', 'crime-points-layer', (e) => {
-      const props = e.features[0].properties;
-      new mapboxgl.Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(`<strong>${props.category}</strong><br>${props.description}`)
-        .addTo(map);
-    });
+      // Add popups on click
+      map.on('click', 'crime-points-layer', (e) => {
+        const props = e.features[0].properties;
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(`<strong>${props.category}</strong><br>${props.description}`)
+          .addTo(map);
+      });
 
-    map.on('mouseenter', 'crime-points-layer', () => {
-      map.getCanvas().style.cursor = 'pointer';
-    });
+      map.on('mouseenter', 'crime-points-layer', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
 
-    map.on('mouseleave', 'crime-points-layer', () => {
-      map.getCanvas().style.cursor = '';
+      map.on('mouseleave', 'crime-points-layer', () => {
+        map.getCanvas().style.cursor = '';
+      });
     });
-  });
+});
 
   </script>
 
